@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Listar usuários</h1>
+    <form action="/listar/usuarios/cargo" method="post">
+        <select name="cargo" id="">
+            <option value="">Todos</option>
+            <option value="gerente">gerente</option>
+            <option value="caixa">caixa</option>
+            <option value="servico gerais">serviço gerais</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+    <form action="/listar/usuario/nome" method="POST">
+        <input type="text" name="nome">
+        <button type="submit">Buscar</button>
+    </form>
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Login</th>
+            <th>Cargo</th>
+            <th>salario</th>
+        </tr>
+        {% for func in funcionarios:%}
+            <tr>
+                <td>{{func.nome}}</td>
+                <td>{{func.login}}</td>
+                <td>{{func.cargo}}</td>
+                <td>{{func.salario}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+
+    <a href="/menu">Voltar</a>
+</body>
+</html>
