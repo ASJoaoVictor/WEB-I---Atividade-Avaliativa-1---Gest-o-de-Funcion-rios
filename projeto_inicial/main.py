@@ -95,10 +95,22 @@ def listar_usuarios_nome():
     nome = request.form.get("nome")
     lista_funcionarios = []
     if nome:
-        for func in funcionarios:
-            if nome == func.nome:
-                lista_funcionarios.append(func)
+        lista_funcionarios.append(buscar_por_nome(nome))
 
     return render_template("listarUsuario.html", funcionarios= lista_funcionarios)
+
+def buscar_por_nome(nome):
+    for func in funcionarios:
+        if nome == func.nome:
+            return func
+    return None
+
+@app.route("/usuario/editar/<nome>", methods=["GET"])
+def editar(nome):
+    usuario = buscar_por_nome(nome)
+    if not usuario:
+        return render_template("editar_usuario.html", message= "Usuário não encontrado", usuario= None)
+    
+    return render_template("editar_usuario.html", message= None, usuario= usuario)
 if __name__ == "__main__":
     app.run(debug=True)
