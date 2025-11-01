@@ -10,10 +10,15 @@ gerente = Funcionario("julia", "julia", "gerente", 3500.0, 2015, "123")
 caixa = Funcionario("Ana", "ana", "caixa", 2500.0, 2019, "123")
 servico = Funcionario("andressa", "andressa", "servico gerais",1250.0, 2020, "132")
 funcionarios = [gerente, caixa, servico]
+current_user = None
+
 app = Flask(__name__)
 
 @app.route("/")
 def home():
+    if current_user:
+        return redirect(url_for("get_menu"))
+    
     return render_template("login.html")
 
 @app.route("/autenticar", methods=["POST"])
@@ -27,7 +32,9 @@ def autenticar():
     else:
         logado, user = logar(login, senha)
         if(logado):
-            return redirect(url_for("get_menu", user= user))
+            global current_user
+            current_user = user
+            return redirect(url_for("get_menu"))
         else:
             msg = "login ou senha incorretos, tente novamente"
             return render_template("login.html", mensagem = msg)
@@ -38,9 +45,10 @@ def logar(login, senha):
             return True, func
     return False, None
 
-@app.route("/menu/<user>", methods=["GET"])
-def get_menu(user):
-    return render_template("menu.html", user= user)
+@app.route("/menu", methods=["GET"])
+def get_menu():
+    print(current_user.nome)
+    return render_template("menu.html", user= current_user)
 
 @app.route("/cadastrar")
 def get_cadastro():
@@ -106,11 +114,30 @@ def buscar_por_nome(nome):
     return None
 
 @app.route("/usuario/editar/<nome>", methods=["GET"])
-def editar(nome):
+def get_editar(nome):
     usuario = buscar_por_nome(nome)
     if not usuario:
         return render_template("editar_usuario.html", message= "Usuário não encontrado", usuario= None)
     
     return render_template("editar_usuario.html", message= None, usuario= usuario)
+
+@app.route("/usuario/editar/<nome>", methods=["POST"])
+def editar_usuario(nome):
+    usuario = buscar_por_nome(nome)
+    if not usuario:
+        return "usuario não encontrado"
+    
+    senha = request.form.get("senha")
+
+    if senha == current_user.senha:
+        print("teste")
+        usuario.nome = request.form.get("nome")
+        usuario.login = request.form.get("login")
+        usuario.anoAdmissaocargo = request.form.get("tipo")
+        usuario.salario = float(request.form.get("salario"))
+        usuario.anoAdmissao = int(request.form.get("admissao"))
+        return redirect(url_for("get_menu"))
+        
+
 if __name__ == "__main__":
     app.run(debug=True)

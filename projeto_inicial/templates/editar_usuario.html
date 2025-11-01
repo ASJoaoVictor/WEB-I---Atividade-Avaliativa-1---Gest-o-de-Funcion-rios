@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="#" method="POST">
+    <form action="{{url_for('editar_usuario', nome= usuario.nome)}}" method="POST">
         <label for="">Nome: </label>
         <input type="text" name="nome" placeholder={{usuario.nome}}><br>
 
@@ -25,7 +25,8 @@
 
         <label for="">Ano de admissão: </label>
         <input type="text" name="admissao" placeholder={{usuario.anoAdmissao}}><br>
-
+        
+        <h4>Para confirmar Digite a senha</h4>
         <label for="">Senha: </label>
         <input type="password" name="senha"><br>
 
