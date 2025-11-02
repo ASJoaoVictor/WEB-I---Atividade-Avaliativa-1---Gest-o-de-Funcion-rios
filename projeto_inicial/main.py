@@ -82,7 +82,7 @@ def cadastrar(nome, login, senha, cargo, anoAdmissao, salario):
         return False
 
 @app.route("/listar/Usuarios", methods=["GET", "POST"])
-def listarUsuarios():
+def listar_usuarios():
     return render_template("listarUsuario.html", funcionarios= funcionarios)
 
 
@@ -128,15 +128,26 @@ def editar_usuario(nome):
         return "usuario não encontrado"
     
     senha = request.form.get("senha")
+    nome = request.form.get("nome")
+    login = request.form.get("login")
+    anoAdmissao = None
+    cargo = request.form.get("tipo")
+    salario = request.form.get("salario")
+    anoAdmissao = request.form.get("admissao")
 
-    if senha == current_user.senha:
-        print("teste")
-        usuario.nome = request.form.get("nome")
-        usuario.login = request.form.get("login")
-        usuario.anoAdmissaocargo = request.form.get("tipo")
-        usuario.salario = float(request.form.get("salario"))
-        usuario.anoAdmissao = int(request.form.get("admissao"))
-        return redirect(url_for("get_menu"))
+    if senha == "123":
+        if nome:
+            usuario.nome = nome
+        if login:
+            usuario.login = login
+        if anoAdmissao:
+            usuario.anoAdmissao = anoAdmissao
+        if cargo:
+            usuario.cargo = cargo
+        if salario:
+            usuario.salario = float(salario)
+
+        return redirect(url_for("listar_usuarios"))
         
 
 if __name__ == "__main__":
