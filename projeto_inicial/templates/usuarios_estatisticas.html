@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Estatísticas</h1>
+    <p>Usuário mais antigo: {{ result[0]}}</p>
+    <p>Usuário com maior salario: {{ result[1]}}</p>
+    <p>Média salarial de gerente: {{ result[2]}}</p>
+    <p>Média salarial de Caixa: {{ result[3]}}</p>
+    <p>Média salarial de serviços gerais: {{ result[4]}}</p>
+    <p>Quantidade de gerentes: {{ result[5]}}</p>
+    <p>Quantidade de caixas: {{ result[6]}}</p>
+    <p>Quantidade de serviços gerais: {{ result[7]}}</p>
+
+    <a href="{{url_for('get_menu')}}">Voltar</a>
+</body>
+</html>

@@ -26,12 +26,17 @@
         <label for="">Ano de admissão: </label>
         <input type="text" name="admissao" placeholder={{usuario.anoAdmissao}}><br>
         
+        <label for="">Senha: </label>
+        <input type="text" name="senha">
+
         <h4>Para confirmar Digite a senha</h4>
         <label for="">Senha: </label>
-        <input type="password" name="senha"><br>
+        <input type="password" name="senha_confirmar"><br>
 
         <button type="submit">Cadastrar</button>
         <p>{{mensagem}}</p>
     </form>
+
+    <a href="{{url_for('listar_usuarios')}}">Voltar</a>
 </body>
 </html>
