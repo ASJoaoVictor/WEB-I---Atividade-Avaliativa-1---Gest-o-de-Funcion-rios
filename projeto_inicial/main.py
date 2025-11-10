@@ -53,9 +53,7 @@ def logoff():
 
 @app.route("/menu", methods=["GET"])
 def get_menu():
-    if current_user:
-        return render_template("menu.html", user= current_user)
-    return "nada"
+    return render_template("menu.html", user= current_user)
 
 @app.route("/cadastrar")
 def get_cadastro():
@@ -115,7 +113,8 @@ def listar_usuarios_nome():
     if nome:
         lista_funcionarios.append(buscar_por_nome(nome))
 
-    return listar_usuarios()
+    return render_template("listar_usuarios.html", funcionarios= lista_funcionarios)
+
 def buscar_por_nome(nome):
     for func in funcionarios:
         if nome == func.nome:
@@ -175,9 +174,9 @@ def editar_usuario(nome):
 def usuarios_estatisticas():
     usuario_mais_antigo = funcionarios[0]
     usuario_maior_salario = funcionarios[0]
-    media_salarial_gerente = None
-    media_salarial_caixa = None
-    media_salarial_servicos_gerais = None
+    media_salarial_gerente = 0
+    media_salarial_caixa = 0
+    media_salarial_servicos_gerais = 0
     quant_gerente = 0
     quant_caixa = 0
     quant_servicos_gerais = 0
@@ -222,7 +221,23 @@ def usuarios_estatisticas():
                                                                   quant_gerente,
                                                                   quant_caixa,
                                                                   quant_servicos_gerais))
+@app.route("/salario/aumento/setor", methods=["GET"])
+def aumento_setor(msg=""):
+    return render_template("aumento_setor.html", msg_setor= msg)
 
+@app.route("/salario/aumento/setor", methods=["POST"])
+def aplicar_aumento_setor():
+    taxa_aumento = (float(request.form.get("taxa_aumento"))/100)+1
+    setor = request.form.get("setor")
+    if setor == "todos":
+        for func in funcionarios:
+            func.salario *= taxa_aumento
+    else:
+        for func in funcionarios:
+            if func.cargo == setor:
+                func.salario *= taxa_aumento
+
+    return aumento_setor("Aumento aplicado com sucesso!")
 
 if __name__ == "__main__":
     app.run(debug=True)
