@@ -223,7 +223,7 @@ def usuarios_estatisticas():
                                                                   quant_servicos_gerais))
 @app.route("/salario/aumento/setor", methods=["GET"])
 def aumento_setor(msg=""):
-    return render_template("aumento_setor.html", msg_setor= msg)
+    return render_template("aumento.html", msg_setor= msg, funcionarios= funcionarios)
 
 @app.route("/salario/aumento/setor", methods=["POST"])
 def aplicar_aumento_setor():
@@ -238,6 +238,20 @@ def aplicar_aumento_setor():
                 func.salario *= taxa_aumento
 
     return aumento_setor("Aumento aplicado com sucesso!")
+
+@app.route("/aumento/nome", methods=["POST"])
+def aumento_nome():
+    nome = request.form.get("nome")
+    taxa_aumento = (float(request.form.get("taxa_aumento"))/100)+1
+
+    usuario = buscar_por_nome(nome)
+
+    if not usuario:
+        return render_template("aumento.html", msg_individual= "usuário não encontrado")
+    
+    usuario.salario *= taxa_aumento
+
+    return render_template("aumento.html", msg_individual= "Aumento aplicado")
 
 if __name__ == "__main__":
     app.run(debug=True)

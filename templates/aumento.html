@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Aumento por setor</h2>
+    <form action="{{url_for('aumento_setor')}}" method="post">
+        <label for="">Taxa de aumento: </label>
+        <input type="text" name="taxa_aumento"><br>
+
+        <label for="">Setor</label>
+        <select name="setor" id="">
+            <option value="todos">todos</option>
+            <option value="gerente">gerente</option>
+            <option value="caixa">caixa</option>
+            <option value="serviços gerais">serviços gerais</option>
+        </select><br>
+
+        <button type="submit">Aplicar</button>
+    </form>
+    <p>{{msg_setor}}</p>
+
+    <h2>Aumento individual</h2>
+
+    <form action="{{url_for('aumento_nome')}}" method="post">
+        <label for="">Taxa de aumento</label>
+        <input type="text" name="taxa_aumento"><br>
+
+        <label for="">Nome:</label>
+        <input type="text" name="nome"><br>
+
+        <button type="submit">Aplicar</button>
+    </form>
+
+<!--     <form action="">
+        <label for="">Taxa de aumento:</label>
+        <input type="text"><br>
+        <table>
+            <tr>
+                <th></th>
+                <th>Nome</th>
+                <th>Cargo</th>
+            </tr>
+            {% for func in funcionarios: %}
+                <tr>
+                    <td><input type="checkbox" name="" id=""></td>
+                    <td><label for="">{{func.nome}}</label></td>
+                    <td><label for="">{{func.cargo}}</label></td>
+                </tr>
+            {%endfor%}
+        </table>
+
+        <button type="submit">Aplicar</button>
+        
+    </form> -->
+    <p>{{msg_individual}}</p>
+
+    <a href="{{url_for('get_menu')}}">Voltar</a>
+</body>
+</html>
