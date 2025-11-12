@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Aumento individual</h2>
+
+    <form action="{{url_for('aplicar_aumento_individual')}}" method="POST">
+        <label for="">Taxa de aumento:</label>
+        <input type="text" name="taxa_aumento"><br>
+        <table>
+            <tr>
+                <th></th>
+                <th>Nome</th>
+                <th>Cargo</th>
+            </tr>
+            {% for func in funcionarios: %}
+                <tr>
+                    <td><input type="checkbox" name="funcionarios_aumento" value="{{func.nome}}" id=""></td>
+                    <td><label for="">{{func.nome}}</label></td>
+                    <td><label for="">{{func.cargo}}</label></td>
+                </tr>
+            {%endfor%}
+        </table>
+
+        <button type="submit">Aplicar</button>
+        
+    </form>
+    <p>{{msg_individual}}</p>
+
+    <a href="{{url_for('get_menu')}}">Voltar</a>
+</body>
+</html>
