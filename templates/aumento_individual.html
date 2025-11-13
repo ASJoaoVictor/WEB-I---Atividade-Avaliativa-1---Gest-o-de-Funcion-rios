@@ -6,6 +6,8 @@
     <title>Document</title>
 </head>
 <body>
+
+
     <h2>Aumento individual</h2>
 
     <form action="{{url_for('aplicar_aumento_individual')}}" method="POST">
@@ -16,6 +18,10 @@
                 <th></th>
                 <th>Nome</th>
                 <th>Cargo</th>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="checkbox_todos"></td>
+                <td><label for="">Todos</label></td>
             </tr>
             {% for func in funcionarios: %}
                 <tr>
@@ -33,4 +39,19 @@
 
     <a href="{{url_for('get_menu')}}">Voltar</a>
 </body>
+<script>
+    const checkbox_todos = document.getElementById("checkbox_todos")
+    checkbox_todos.addEventListener("change", () => {
+        checkbox_usuarios = document.querySelectorAll("input[type=checkbox]")
+        if(checkbox_todos.checked){
+            checkbox_usuarios.forEach(usuarios => { 
+                usuarios.checked = true
+            });
+        }else{
+            checkbox_usuarios.forEach(usuarios => { 
+                usuarios.checked = false
+            });
+        }
+    })
+</script>
 </html>

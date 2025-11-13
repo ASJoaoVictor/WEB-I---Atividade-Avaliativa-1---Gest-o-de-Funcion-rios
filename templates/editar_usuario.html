@@ -14,7 +14,7 @@
         <input type="text" name="login" placeholder={{usuario.login}}><br>
 
         <label for="">Cargo</label>
-        <select name="tipo" id="" aria-placeholder={{usuario.cargo}}>
+        <select name="tipo" id="">
             <option value="gerente">Gerente</option>
             <option value="caixa">Caixa</option>
             <option value="serviços gerais">Serviços gerais</option>
@@ -33,10 +33,20 @@
         <label for="">Senha: </label>
         <input type="password" name="senha_confirmar" required><br>
 
-        <button type="submit">Cadastrar</button>
+        <button type="submit">Editar</button>
         <p>{{mensagem}}</p>
     </form>
 
     <a href="{{url_for('listar_usuarios')}}">Voltar</a>
 </body>
+<script>
+    lista_options = document.querySelectorAll("option")
+    cargo = {{ usuario.cargo|tojson }}
+
+    lista_options.forEach(opt => {
+        if(opt.value === cargo){
+            opt.selected = true
+        }
+    });
+</script>
 </html>
