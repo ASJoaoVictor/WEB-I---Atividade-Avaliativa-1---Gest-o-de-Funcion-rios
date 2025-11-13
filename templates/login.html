@@ -12,10 +12,10 @@
     <h1>Testando Flask e HTML</h1>
     <div>Realizar Login</div>
     <form action="/autenticar" method="POST">
-        <label for="">Digite o seu login</label>
-        <input type="text" name="loginUsuario">
-        <label for="">Digite sua senha:</label>
-        <input type="password" name="senhaUsuario">
+        <label for="loginUsuario">Digite o seu login</label>
+        <input type="text" name="loginUsuario" id="loginUsuario" required>
+        <label for="senhaUsuario">Digite sua senha:</label>
+        <input type="password" name="senhaUsuario" id="senhaUsuario" required>
 
         <button type="submit">Autenticar</button>
     </form>

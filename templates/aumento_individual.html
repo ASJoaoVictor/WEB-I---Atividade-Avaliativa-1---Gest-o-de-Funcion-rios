@@ -10,7 +10,7 @@
 
     <form action="{{url_for('aplicar_aumento_individual')}}" method="POST">
         <label for="">Taxa de aumento:</label>
-        <input type="text" name="taxa_aumento"><br>
+        <input type="text" name="taxa_aumento" required><br>
         <table>
             <tr>
                 <th></th>
@@ -19,9 +19,9 @@
             </tr>
             {% for func in funcionarios: %}
                 <tr>
-                    <td><input type="checkbox" name="funcionarios_aumento" value="{{func.nome}}" id=""></td>
-                    <td><label for="">{{func.nome}}</label></td>
-                    <td><label for="">{{func.cargo}}</label></td>
+                    <td><input type="checkbox" name="funcionarios_aumento" value="{{func.nome}}" id="{{func.nome}}"></td>
+                    <td><label for="{{func.nome}}">{{func.nome}}</label></td>
+                    <td><label for="{{func.nome}}">{{func.cargo}}</label></td>
                 </tr>
             {%endfor%}
         </table>
