@@ -1,8 +1,7 @@
 from flask import *
 from funcionario import Funcionario
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
-loginPadrao = "user"
-senhaPadrao = "123"
 
 #funcionario: nome, login, senha, tipo(gerente, caixa, serviços_gerais), salario
 
@@ -10,48 +9,66 @@ gerente = Funcionario("julia", "julia", "gerente", 3500.0, 2015, "123")
 caixa = Funcionario("ana", "ana", "caixa", 2500.0, 2010, "123")
 servico = Funcionario("andressa", "andressa", "serviços gerais",1250.0, 2020, "132")
 funcionarios = [gerente, caixa, servico]
-current_user = None
 
 app = Flask(__name__)
+app.secret_key = "issoesecreto"
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "home"
+
+from flask import make_response
+
+#Não deixa as respostas serem salva no cache
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
+
+
+@login_manager.user_loader
+def load_user(login):
+    for func in funcionarios:
+        if(func.login == login):
+            return func
+    return None
 
 @app.route("/")
 def home():
-    if current_user:
-        return redirect(url_for("get_menu"))
-    
     return render_template("login.html")
 
 @app.route("/autenticar", methods=["POST"])
-def autenticar():
+def login():
     login = request.form.get("loginUsuario")
     senha = request.form.get("senhaUsuario")
 
     if(login == "" or senha == "" or " " in login):
         msg = "Usuário ou senha invalido"
         return render_template("login.html", mensagem = msg)
+    
+    user = autenticar(login, senha)
+    if(user):
+        login_user(user)
+        return redirect(url_for("get_menu"))
     else:
-        logado, user = logar(login, senha)
-        if(logado):
-            global current_user
-            current_user = user
-            return redirect(url_for("get_menu"))
-        else:
-            msg = "login ou senha incorretos, tente novamente"
-            return render_template("login.html", mensagem = msg)
+        msg = "login ou senha incorretos, tente novamente"
+        return render_template("login.html", mensagem = msg)
 
-def logar(login, senha):
+def autenticar(login, senha):
     for func in funcionarios:
         if(func.login == login and func.senha == senha):
-            return True, func
-    return False, None
+            return func
+    return None
 
 @app.route("/logoff", methods=["GET"])
+@login_required
 def logoff():
-    global current_user
-    current_user = None
+    logout_user()
     return redirect(url_for("home"))
 
 @app.route("/menu", methods=["GET"])
+@login_required
 def get_menu():
     return render_template("menu.html", user= current_user)
 
@@ -87,6 +104,7 @@ def cadastrar(nome, login, senha, cargo, anoAdmissao, salario):
         return False
 
 @app.route("/listar/usuarios", methods=["GET", "POST"])
+@login_required
 def listar_usuarios(msg=""):
 
     if not funcionarios:
@@ -95,6 +113,7 @@ def listar_usuarios(msg=""):
     return render_template("listar_usuarios.html", msg= msg, funcionarios= funcionarios)
 
 @app.route("/listar/usuarios/cargo", methods=["POST"])
+@login_required
 def listar_usuarios_cargo():
     cargo = request.form.get("cargo")
     lista_funcionarios = funcionarios[0:]
@@ -107,6 +126,7 @@ def listar_usuarios_cargo():
     return render_template("listar_usuarios.html", funcionarios= lista_funcionarios)
 
 @app.route("/listar/usuario/nome", methods=["POST"])
+@login_required
 def listar_usuarios_nome():
     nome = request.form.get("nome")
     lista_funcionarios = []
@@ -122,8 +142,12 @@ def buscar_por_nome(nome):
     return None
 
 @app.route("/usuario/remover/<nome>", methods=["GET"])
+@login_required
 def remover_usuario(nome):
     usuario = buscar_por_nome(nome)
+
+    if(current_user.cargo != "gerente"):
+        return listar_usuarios("Só gerente pode remover")
 
     if(current_user.nome == nome):
         return listar_usuarios("Não é possível remover usuário atual!")
@@ -132,6 +156,7 @@ def remover_usuario(nome):
     return listar_usuarios("Usuário removido com sucesso!")
 
 @app.route("/usuario/editar/<nome>", methods=["GET"])
+@login_required
 def get_editar(nome):
     usuario = buscar_por_nome(nome)
     if not usuario:
@@ -140,10 +165,14 @@ def get_editar(nome):
     return render_template("editar_usuario.html", message= None, usuario= usuario)
 
 @app.route("/usuario/editar/<nome>", methods=["POST"])
+@login_required
 def editar_usuario(nome):
     usuario = buscar_por_nome(nome)
     if not usuario:
         return "usuario não encontrado"
+
+    if current_user.cargo != "gerente":
+        return render_template("editar_usuario.html", usuario= usuario, mensagem= "Apenas gerente pode editar!")
     
     senha_confirmar = request.form.get("senha_confirmar")
     nome = request.form.get("nome")
@@ -154,7 +183,7 @@ def editar_usuario(nome):
     anoAdmissao = request.form.get("admissao")
     senha = request.form.get("senha")
 
-    if senha_confirmar == "123":
+    if senha_confirmar == current_user.senha:
         if nome:
             usuario.nome = nome
         if login:
@@ -171,6 +200,7 @@ def editar_usuario(nome):
     return render_template("editar_usuario.html", usuario= usuario, mensagem= "Usuário editado com sucesso!")
         
 @app.route("/usuarios/estatisticas", methods=["GET"])
+@login_required
 def usuarios_estatisticas():
     usuario_mais_antigo = funcionarios[0]
     usuario_maior_salario = funcionarios[0]
@@ -222,14 +252,17 @@ def usuarios_estatisticas():
                                                                   quant_caixa,
                                                                   quant_servicos_gerais))
 @app.route("/salario/aumento/setor", methods=["GET"])
+@login_required
 def aumento_setor(msg=""):
     return render_template("aumento_setor.html", msg_setor= msg, funcionarios= funcionarios)
 
 @app.route("/salario/aumento/individual", methods=["GET"])
+@login_required
 def aumento_individual():
     return render_template("aumento_individual.html", msg= "", funcionarios= funcionarios)
 
 @app.route("/salario/aumento/setor", methods=["POST"])
+@login_required
 def aplicar_aumento_setor():
     taxa_aumento = (float(request.form.get("taxa_aumento"))/100)+1
     setor = request.form.get("setor")
@@ -244,6 +277,7 @@ def aplicar_aumento_setor():
     return aumento_setor("Aumento aplicado com sucesso!")
 
 @app.route("/aumento/nome", methods=["POST"])
+@login_required
 def aplicar_aumento_individual():
     funcionarios_aumento = request.form.getlist("funcionarios_aumento")
     taxa_aumento = (float(request.form.get("taxa_aumento"))/100)+1

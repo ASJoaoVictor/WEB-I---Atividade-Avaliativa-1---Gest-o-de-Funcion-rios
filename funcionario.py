@@ -1,4 +1,5 @@
-class Funcionario():
+from flask_login import UserMixin
+class Funcionario(UserMixin):
     def __init__(self, nome, login, cargo, salario, anoAdmissao, senha):
         self.nome = nome
         self.__login = login
@@ -39,4 +40,7 @@ class Funcionario():
     @senha.setter
     def senha(self, value):
         self.__senha = value
+
+    def get_id(self):
+        return self.nome
 
