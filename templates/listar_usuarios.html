@@ -32,13 +32,13 @@
         </tr>
         {% for func in funcionarios:%}
             <tr>
-                <td>{{func.nome}}</td>
-                <td>{{func.login}}</td>
-                <td>{{func.cargo}}</td>
-                <td>{{func.anoAdmissao}}</td>
-                <td>{{func.salario}}</td>
-                <td><a href="/usuario/editar/{{func.nome}}">Editar</a></td>
-                <td><a href="/usuario/remover/{{func.nome}}">Remover</a></td>
+                <td>{{func[1]}}</td>
+                <td>{{func[2]}}</td>
+                <td>{{func[3]}}</td>
+                <td>{{func[4]}}</td>
+                <td>{{func[5]}}</td>
+                <td><a href="/usuario/editar/{{func[0]}}">Editar</a></td>
+                <td><a href="/usuario/remover/{{func[0]}}">Remover</a></td>
             </tr>
         {%endfor%}
     </table>

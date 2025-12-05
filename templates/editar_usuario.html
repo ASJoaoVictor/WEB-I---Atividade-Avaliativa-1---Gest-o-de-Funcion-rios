@@ -6,45 +6,47 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="{{url_for('editar_usuario', nome= usuario.nome)}}" method="POST">
-        <label for="">Nome: </label>
-        <input type="text" name="nome" placeholder={{usuario.nome}}><br>
+    {%if funcionario:%}
+        <form action="{{url_for('editar_usuario', id= funcionario[0])}}" method="POST">
+            <label for="">Nome: </label>
+            <input type="text" name="nome" placeholder={{funcionario[1]}}><br>
 
-        <label for="">Login: </label>
-        <input type="text" name="login" placeholder={{usuario.login}}><br>
+            <label for="">Login: </label>
+            <input type="text" name="login" placeholder={{funcionario[2]}}><br>
 
-        <label for="">Cargo</label>
-        <select name="tipo" id="">
-            <option value="gerente">Gerente</option>
-            <option value="caixa">Caixa</option>
-            <option value="serviços gerais">Serviços gerais</option>
-        </select><br>
+            <label for="">Cargo</label>
+            <select name="tipo" id="">
+                <option value="gerente">Gerente</option>
+                <option value="caixa">Caixa</option>
+                <option value="serviços gerais">Serviços gerais</option>
+            </select><br>
 
-        <label for="">Salário: </label>
-        <input type="text" name="salario" placeholder={{usuario.salario}}><br>
+            <label for="">Salário: </label>
+            <input type="text" name="salario" placeholder={{funcionario[5]}}><br>
 
-        <label for="">Ano de admissão: </label>
-        <input type="text" name="admissao" placeholder={{usuario.anoAdmissao}}><br>
-        
-        <label for="">Senha: </label>
-        <input type="text" name="senha">
+            <label for="">Ano de admissão: </label>
+            <input type="text" name="admissao" placeholder={{funcionario[4]}}><br>
+            
+            <label for="">Senha: </label>
+            <input type="password" name="senha">
 
-        <h4>Para confirmar Digite a senha</h4>
-        <label for="">Senha: </label>
-        <input type="password" name="senha_confirmar" required><br>
+            <h4>Para confirmar Digite a senha</h4>
+            <label for="">Senha: </label>
+            <input type="password" name="senha_confirmar" required><br>
 
-        <button type="submit">Editar</button>
+            <button type="submit">Editar</button>
+        </form>
+        {%endif%}
         <p>{{mensagem}}</p>
-    </form>
 
     <a href="{{url_for('listar_usuarios')}}">Voltar</a>
 </body>
 <script>
     lista_options = document.querySelectorAll("option")
-    cargo = {{ usuario.cargo|tojson }}
-
+    cargo = {{ funcionario[3] | default('') | tojson }}
+    console.log(cargo)
     lista_options.forEach(opt => {
-        if(opt.value === cargo){
+        if(opt.value == cargo){
             opt.selected = true
         }
     });

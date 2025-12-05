@@ -25,9 +25,9 @@
             </tr>
             {% for func in funcionarios: %}
                 <tr>
-                    <td><input type="checkbox" name="funcionarios_aumento" value="{{func.nome}}" id="{{func.nome}}"></td>
-                    <td><label for="{{func.nome}}">{{func.nome}}</label></td>
-                    <td><label for="{{func.nome}}">{{func.cargo}}</label></td>
+                    <td><input type="checkbox" name="funcionarios_aumento" value="{{func[0]}}" id="{{func[0]}}"></td>
+                    <td><label for="{{func.nome}}">{{func[1]}}</label></td>
+                    <td><label for="{{func.nome}}">{{func[3]}}</label></td>
                 </tr>
             {%endfor%}
         </table>

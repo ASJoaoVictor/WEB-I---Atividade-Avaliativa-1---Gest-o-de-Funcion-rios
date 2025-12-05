@@ -6,8 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Bem vindo {{user.nome}}</h1><a href="{{url_for('logoff')}}">LOGOFF</a>
-    <p>Cargo: {{user.cargo}}</p>
+    <h1>Bem vindo {{user[1]}}</h1>
+    <p>Cargo: {{user[3]}}</p>
     
     <a href="{{url_for('listar_usuarios')}}" >Listar Usuários</a><br>
     <a href="{{url_for('usuarios_estatisticas')}}">Estatísticas</a><br>
